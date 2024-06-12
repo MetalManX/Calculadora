@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Basica</title>
+<style>
+    body {
+        display: block;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(14, 17, 56, 0.822) 50%, rgb(0, 0, 0) 100%), url(background.jpg); 
+        background-size: cover;
+	    background-position: center;
+	    background-attachment: fixed;
+    }
+    h1 {
+        -webkit-text-stroke: 0.05em rgb(255, 255, 255);
+    }
+    .calculator {
+        width: 20em;
+        margin: auto;
+        padding: 2em;
+        border: 0.3em solid #ccc;
+        border-radius: 1.5em;
+        box-shadow: 0 0 1em 0 rgba(255, 255, 255, 0.6);
+        background: rgb(96,96,96);
+        background: radial-gradient(circle, rgba(96,96,96,1) 0%, rgba(171,171,171,1) 50%, rgba(96,96,96,1) 100%); 
+    }
+    #operacion, button{
+        margin-bottom: 0.5em;
+        width: 100%;
+        padding: 0.3em;
+        font-size: 1em;
+    }
+    input[type="number"] {
+        display: block;
+        margin-bottom: 0.5em;
+        width: 95.7%;
+        padding: 0.3em;
+        font-size: 1em;
+    }
+    #resultado {
+        width: auto;
+        margin: auto;
+        padding: 1em;
+        border: 0.3em solid #ccc;
+        border-radius: 1.5em;
+        background: rgb(255, 255, 255);
+    }
+    
+</style>
+</head>
+<body>
+    <header>
+        <h1>Calculadora Basica</h1>
+    </header>
+    <div class="calculator">
+        <!-- Aqui esta la casilla de seleccion de operaciones -->
+        <select id="operacion" onchange="ajustarCasillasYCalcular()">
+            <option value="">Selecciona una operación</option>
+            <option value="suma">Suma</option>
+            <option value="resta">Resta</option>
+            <option value="multiplicacion">Multiplicación</option>
+            <option value="division">División</option>
+            <option value="producto_notable">Producto notable</option>
+            <option value="raiz_cuadrada">Raíz cuadrada</option>
+            <option value="area_circulo">Área de un círculo</option>
+            <option value="ecuacion_segundo_grado">Ecuación de segundo grado</option>
+        </select>
+
+        <!-- Aqui estan las casillas donde se ingresaran los numeros -->
+        <input type="number" id="numero1" placeholder="Primer número">
+        <input type="number" id="numero2" placeholder="Segundo número">
+        <input type="number" id="numero3" placeholder="Tercer número">
+
+        <!-- Boton que calculara los resultados -->
+        <button id="calcular" onclick="calcularOperacion()">Calcular</button>
+        <!-- Esto es para mostrar el resultado -->
+        <p id="resultado"></p>
+    </div>
+
+    <script>
+        function sumar() {
+            var num1 = document.getElementById('numero1').value;
+            var num2 = document.getElementById('numero2').value;
+            document.getElementById('resultado').innerText = parseFloat(num1) + parseFloat(num2); 
+        }
+        function restar() {
+            var num1 = document.getElementById('numero1').value;
+            var num2 = document.getElementById('numero2').value;
+            document.getElementById('resultado').innerText = parseFloat(num1) - parseFloat(num2);
+        }
+        function multiplicacion() {
+            var num1 = document.getElementById('numero1').value;
+            var num2 = document.getElementById('numero2').value;
+            document.getElementById('resultado').innerText = parseFloat(num1) * parseFloat(num2);
+        }
+        function division() {
+            var num1 = document.getElementById('numero1').value;
+            var num2 = document.getElementById('numero2').value;
+            document.getElementById('resultado').innerText = parseFloat(num1) / parseFloat(num2);
+        }
+        function areaDeUnCirculo() {
+            var radio = document.getElementById('numero1').value;
+            document.getElementById('resultado').innerText = Math.PI * Math.pow(radio, 2);
+        }
+        function ecuacionDeSegundoGrado() {
+            var a = parseFloat(document.getElementById('numero1').value);
+            var b = parseFloat(document.getElementById('numero2').value);
+            var c = parseFloat(document.getElementById('numero3').value);
+            var discriminante = Math.pow(b, 2) - 4 * a * c;
+
+            if (discriminante > 0) {
+                var x1 = (-b + Math.sqrt(discriminante)) / (2 * a);
+                var x2 = (-b - Math.sqrt(discriminante)) / (2 * a);
+                document.getElementById('resultado').innerText = `x1 = ${x1} \n x2 = ${x2}`;
+            } else if (discriminante === 0) {
+                var x = -b / (2 * a);
+                document.getElementById('resultado').innerText = `x = ${x}`;
+            } else {
+                document.getElementById('resultado').innerText = "La ecuación no tiene soluciones reales.";
+            }
+        }
+        function producNotable() {
+            var a = parseFloat(document.getElementById('numero1').value);
+            var b = parseFloat(document.getElementById('numero2').value);
+            var cuadradoA = Math.pow(a, 2);
+            var cuadradoB = Math.pow(b, 2);
+            var suma = a + b;
+            var resta = a - b;
+            document.getElementById('resultado').innerText = `El cuadrado de la suma es ${Math.pow(suma, 2)} \n El cuadrado de la resta es ${Math.pow(resta, 2)}`;
+        }
+        function raizCuadrada() {
+            var num = parseFloat(document.getElementById('numero1').value);
+            document.getElementById('resultado').innerText = Math.sqrt(num);
+        }
+
+        // Esta funcion es para decirle a las casillas cuales se deben bloquear y cuales no
+        function ajustarCasillasYCalcular() {
+            var operacion = document.getElementById('operacion').value;
+            var num1 = document.getElementById('numero1');
+            var num2 = document.getElementById('numero2');
+            var num3 = document.getElementById('numero3');
+            var botonCalcular = document.getElementById('calcular');
+
+            // Aqui decimos que numx.disable = false para que siempre este en falso la desactivacion de las casillas
+            num1.disabled = false;
+            num2.disabled = false;
+            num3.disabled = false;
+
+            // Y aqui simplemente le decimos al programa que casillas se desactivan -._-.
+            switch(operacion) {
+                case 'suma':
+                case 'resta':
+                case 'multiplicacion':
+                case 'division':
+                case 'producto_notable':
+                    num3.disabled = true;
+                    break;
+                case 'raiz_cuadrada':
+                case 'area_circulo':
+                    num2.disabled = true;
+                    num3.disabled = true;
+                    break;
+                case 'ecuacion_segundo_grado':
+                    break;
+                default:
+                    // cuando no este seleccionada ninguna operacion (Seleccione una operacion) todas las casillas automaticamente se desactivan
+                    num1.disabled = true;
+                    num2.disabled = true;
+                    num3.disabled = true;
+                    botonCalcular.style.display = 'none'; // Ocultar el botón
+                    return;
+            }
+
+            // Aqui mostramos el boton porque obviamente ya tendriamos algo seleccionado
+            botonCalcular.style.display = 'block';
+        }
+
+        // Esta funcion es basicamente llamar a todas las funciones de operaciones
+        function calcularOperacion() {
+            var operacion = document.getElementById('operacion').value;            
+            // Llamar a la función correspondiente a la operación seleccionada
+            switch(operacion) {
+                case 'suma':
+                    sumar();
+                    break;
+                case 'resta':
+                    restar();
+                    break;
+                case 'multiplicacion':
+                    multiplicacion();
+                    break;
+                case 'division':
+                    division();
+                    break;
+                case 'producto_notable':
+                    producNotable();
+                    break;
+                case 'area_circulo':
+                    areaDeUnCirculo();
+                    break;
+                case 'raiz_cuadrada':
+                    raizCuadrada();
+                    break;
+                case 'ecuacion_segundo_grado':
+                    ecuacionDeSegundoGrado();
+            }
+        }
+    </script>
+</body>
+</html>
